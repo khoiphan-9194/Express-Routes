@@ -37,6 +37,8 @@ const createCard = (tip) => {
   tipsContainer.appendChild(cardEl);
 };
 
+
+
 // Get a list of existing tips from the server
 const getTips = () =>
   fetch('/api/tips', {
@@ -45,8 +47,8 @@ const getTips = () =>
       'Content-Type': 'application/json',
     },
   })
-    .then((response) => response.json())
-    .then((data) => data)
+    .then((response) => response.json()) //convert response to json
+    .then((data) => data) //return data which da is an array of objects
     .catch((error) => {
       console.error('Error:', error);
     });
@@ -58,19 +60,30 @@ const postTip = (tip) =>
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(tip),
+    body: JSON.stringify(tip), //JSON.stringify(tip) converts a JavaScript object or value to a JSON string, 
+    //but here we are sending the tip object to the server because the server expects a json object 
+    //which is the body of the request
+    //body is the object that we are sending to the server since server expects a json object
+    
   })
-    .then((response) => response.json())
-    .then((data) => {
+  // what type of data should we expect to receive from the server?
+  // answer: json
+  // what type of data are we sending to the server?
+  // answer: json
+    .then((response) => response.json()) 
+    // convert response to json because we are expecting a json response from the server, 
+    .then((data) => //data is the response from the server which is a json object
+      {
       alert(data);
-      createCard(tip);
+      createCard(tip); 
     })
     .catch((error) => {
       console.error('Error:', error);
     });
 
 // When the page loads, get all the tips
-getTips().then((data) => data.forEach((tip) => createCard(tip)));
+getTips()
+.then((data) => data.forEach((tip) => createCard(tip)));
 
 // Function to validate the tips that were submitted
 // TODO: Use this function to validate the form data. Accepts an object with {username, topic, tip}. Returns { isValid: boolean, and errors: Object }
@@ -103,9 +116,8 @@ const validateTip = (newTip) => {
   }
 
   const result = {
-    isValid: !!(utest && tipContentCheck && topicCheck),
-    errors: errorState,
-  };
+    isValid:!!(utest && tipContentCheck && topicCheck), // (utest && tipContentCheck && topicCheck)
+  }; //if all are true, then isValid is true, otherwise false
 
   // Return result object with a isValid boolean and an errors object for any errors that may exist
   return result;
@@ -121,9 +133,41 @@ const showErrors = (errorObj) => {
   });
 };
 
+// Post a new tip to the page
+
+
 // Helper function to send a POST request to the diagnostics route (/api/diagnostics)
 const submitDiagnostics = (submissionObj) => {
+
+  // what type of data should we send to the server? //json 
+  // what type of data should we expect to receive from the server? //json
+
   // TODO: your code here
+  fetch('api/diagnostics', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    //what is JSON.stringify(submissionObj)?
+    //JSON.stringify() method converts a JavaScript object or value to a JSON string
+    body: JSON.stringify(submissionObj), //object errors 
+  })
+    .then((res) => res.json()) //convert response to json
+    .then((data) => {
+      alert(data.status);
+      showErrors(submissionObj.errors);
+    }
+    )
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+
+    
+
+
+
+    
+
   console.info(
     '⚠️ Create the logic for the fetch POST request in scripts/index.js'
   );
