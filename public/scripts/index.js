@@ -7,6 +7,9 @@ fbBtn.addEventListener('click', (e) => {
   window.location.href = '/feedback';
 });
 
+
+// Function to create a card for each tip
+
 const createCard = (tip) => {
   // Create card
   const cardEl = document.createElement('div');
@@ -52,6 +55,7 @@ const getTips = () =>
     .catch((error) => {
       console.error('Error:', error);
     });
+    
 
 // Post a new tip to the page
 const postTip = (tip) =>
@@ -74,8 +78,8 @@ const postTip = (tip) =>
     // convert response to json because we are expecting a json response from the server, 
     .then((data) => //data is the response from the server which is a json object
       {
-      alert(data);
-      createCard(tip); 
+      alert(data); //data is the response from the server which is a json object
+      createCard(tip); //tip is the object that we are sending to the server
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -83,7 +87,7 @@ const postTip = (tip) =>
 
 // When the page loads, get all the tips
 getTips()
-.then((data) => data.forEach((tip) => createCard(tip)));
+.then((data) => data.forEach((tipElement) => createCard(tipElement)));
 
 // Function to validate the tips that were submitted
 // TODO: Use this function to validate the form data. Accepts an object with {username, topic, tip}. Returns { isValid: boolean, and errors: Object }
@@ -117,6 +121,7 @@ const validateTip = (newTip) => {
 
   const result = {
     isValid:!!(utest && tipContentCheck && topicCheck), // (utest && tipContentCheck && topicCheck)
+    errors: errorState,
   }; //if all are true, then isValid is true, otherwise false
 
   // Return result object with a isValid boolean and an errors object for any errors that may exist
@@ -139,40 +144,35 @@ const showErrors = (errorObj) => {
 // Helper function to send a POST request to the diagnostics route (/api/diagnostics)
 const submitDiagnostics = (submissionObj) => {
 
-  // what type of data should we send to the server? //json 
-  // what type of data should we expect to receive from the server? //json
-
-  // TODO: your code here
-  fetch('api/diagnostics', {
+  fetch('/api/diagnostics', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    //what is JSON.stringify(submissionObj)?
-    //JSON.stringify() method converts a JavaScript object or value to a JSON string
-    body: JSON.stringify(submissionObj), //object errors 
+    body: JSON.stringify(submissionObj),
   })
-    .then((res) => res.json()) //convert response to json
+    .then((response) => response.json())
     .then((data) => {
-      alert(data.status);
+      alert("diagnostics>>there is an error in your submission");
       showErrors(submissionObj.errors);
-    }
-    )
+    })
     .catch((error) => {
       console.error('Error:', error);
     });
 
-    
 
-
-
-    
+ 
 
   console.info(
     '⚠️ Create the logic for the fetch POST request in scripts/index.js'
   );
-  alert('Add your logic to scripts/index.js');
+  alert('from scripts/index.js');
 };
+
+
+
+
+
 
 // Function to handle when a user submits the feedback form
 const handleFormSubmit = (e) => {
@@ -193,7 +193,7 @@ const handleFormSubmit = (e) => {
   };
 
   // Run the tip object through our validator function
-  const submission = validateTip(newTip);
+  const submission = validateTip(newTip); //submission is an object with isValid and errors properties
 
   // If the submission is valid, post the tip. Otherwise, handle the errors.
   return submission.isValid ? postTip(newTip) : submitDiagnostics(submission);

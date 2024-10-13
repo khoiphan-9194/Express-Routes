@@ -22,15 +22,18 @@ app.get('/', (req, res) =>
 );
 
 
-// Fallback route for when a user attempts to visit routes that don't exist
-app.get('*', (req, res) =>
-  res.sendFile(path.join(__dirname, '/public/pages/404.html'))
-);
 
 // GET Route for feedback page
 app.get('/feedback', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/pages/feedback.html'))
 );
+
+
+// Fallback route for when a user attempts to visit routes that don't exist
+app.get('*', (req, res) =>
+  res.sendFile(path.join(__dirname, '/public/pages/404.html'))
+);
+
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)

@@ -13,24 +13,23 @@ diagnostics.get('/', (req, res) => {
 // POST Route for a error logging
 diagnostics.post('/', (req, res) => {
   // TODO: Logic for appending data to the db/diagnostics.json file
-  const { isValid, errors } = req.body; //object errors
+  const { isValid, errors } = req.body;
 
-  
-    const FullError = {
-      time: Date.now(),
-      error_id: uuidv4(),
-      errors,
-    };
-    
+  const payloadError = {
+    time: Date.now(),
+    error_id: uuidv4(),
+    errors,
+  };
+  if (!isValid) 
+     {
+    readAndAppend(payloadError, './db/diagnostics.json');
+    res.json(`From Server: Diagnostic information added 🔧`);
+  }
+  else {
+    res.json('From Server: Object is valid');
 
+  }
 
-    if (isValid) {
-      readAndAppend(FullError, './db/diagnostics.json');
-      res.json(`Error has been logged`);
-    } else {
-      res.json(`Error has not been logged`);
-    }
- 
 });
 
 
